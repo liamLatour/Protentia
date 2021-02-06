@@ -38,7 +38,7 @@ var resolution = [1000, 1000];
 let fonts = ['Arial', 'Verdana', 'Arial Black', 'Impact'];
 
 
-const PORT = 80;
+const PORT = 3000;
 const HOST = '0.0.0.0';
 
 const app = express();
@@ -62,4 +62,4 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, HOST);
-console.log("Running on http://0.0.0.0:80");
+console.log("Running on http://0.0.0.0:3000");

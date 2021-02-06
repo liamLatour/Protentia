@@ -9,6 +9,6 @@ RUN install_packages graphicsmagick
 RUN npm install --production --silent && mv node_modules ../
 
 COPY . .
-EXPOSE 80
+EXPOSE 3000
 
 CMD ["npm", "start"]
