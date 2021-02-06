@@ -43,6 +43,21 @@ const HOST = '0.0.0.0';
 
 const app = express();
 app.get('/', (req, res) => {
+    res.send({
+        "messages": [
+          {
+            "attachment": {
+              "type": "image",
+              "payload": {
+                "url": "http://wsb.onthewifi.com:3000/image"
+              }
+            }
+          }
+        ]
+      });
+});
+
+app.get('/image', (req, res) => {
     download('https://picsum.photos/' + resolution[0] + '/' + resolution[1], 'inspiration.jpg', function () {
         gm('inspiration.jpg')
             .region(resolution[0], resolution[1], 0, 0)
