@@ -74,7 +74,11 @@ app.get('/', (req, res) => {
 
 app.get('/create', (req, res) => {
   createPic();
-  res.send("HELLO");
+  res.json({
+    "messages": [
+      {"text": "Let's go 🎉"}
+    ]
+   });
 });
 
 app.get('/image.jpg', (req, res) => {
