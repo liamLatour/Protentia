@@ -13,16 +13,31 @@ const express = require('express');
 
 var download = function (uri, filename, callback) {
     request.head(uri, function (err, res, body) {
-        console.log('content-type:', res.headers['content-type']);
-        console.log('content-length:', res.headers['content-length']);
-
         request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
     });
 };
 
 function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
-}  
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function createPic(){
+  download('https://picsum.photos/' + resolution[0] + '/' + resolution[1], 'inspiration.jpg', function () {
+    gm('inspiration.jpg')
+        .region(resolution[0], resolution[1], 0, 0)
+        .gravity('Center')
+        .fill('#3a3a3a')
+        .stroke('#ffffff', 2)
+        .font(fonts[getRandomInt(4)], 70)
+        .drawText(0, -100, wrap(quote, {
+            width: 25
+        }))
+        .write('inspiration.jpg', err => {
+            if (err) return console.error(err);
+            console.log("Done");
+        });
+  });
+}
 
 const app = express();
 
@@ -58,21 +73,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/create', (req, res) => {
-  download('https://picsum.photos/' + resolution[0] + '/' + resolution[1], 'inspiration.jpg', function () {
-    gm('inspiration.jpg')
-        .region(resolution[0], resolution[1], 0, 0)
-        .gravity('Center')
-        .fill('#3a3a3a')
-        .stroke('#ffffff', 2)
-        .font(fonts[getRandomInt(4)], 70)
-        .drawText(0, -100, wrap(quote, {
-            width: 25
-        }))
-        .write('inspiration.jpg', err => {
-            if (err) return console.error(err);
-            res.send("Done");
-        });
-  });
+  createPic();
+  res.send("HELLO");
 });
 
 app.get('/image.jpg', (req, res) => {
