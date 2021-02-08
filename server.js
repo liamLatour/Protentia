@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
         "attachment": {
           "type": "image",
           "payload": {
-            "url": "http://wsb.onthewifi.com:3000/image"
+            "url": "http://wsb.onthewifi.com:3000/image.jpg"
           }
         }
       }
@@ -75,12 +75,12 @@ app.get('/create', (req, res) => {
   });
 });
 
-app.get('/image', (req, res) => {
+app.get('/image.jpg', (req, res) => {
   var type = 'image/jpeg';
   var s = fs.createReadStream(__dirname + '/inspiration.jpg');
 
   s.on('open', function () {
-      res.set('Content-Type', type);
+      res.setHeader('Content-Type', type);
       s.pipe(res);
   });
   s.on('error', function () {
