@@ -43,33 +43,36 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 
 app.get('/', (req, res) => {
+  res.json({
+    "messages": [
+      {
+        "attachment": {
+          "type": "image",
+          "payload": {
+            "url": "http://wsb.onthewifi.com:3000/image"
+          }
+        }
+      }
+    ]
+  });
+});
+
+app.get('/create', (req, res) => {
   download('https://picsum.photos/' + resolution[0] + '/' + resolution[1], 'inspiration.jpg', function () {
-        gm('inspiration.jpg')
-            .region(resolution[0], resolution[1], 0, 0)
-            .gravity('Center')
-            .fill('#3a3a3a')
-            .stroke('#ffffff', 2)
-            .font(fonts[getRandomInt(4)], 70)
-            .drawText(0, -100, wrap(quote, {
-                width: 25
-            }))
-            .write('inspiration.jpg', err => {
-                if (err) return console.error(err);
-                //res.sendFile(__dirname + '/inspiration.jpg');
-                res.json({
-                  "messages": [
-                    {
-                      "attachment": {
-                        "type": "image",
-                        "payload": {
-                          "url": "http://wsb.onthewifi.com:3000/image"
-                        }
-                      }
-                    }
-                  ]
-                });
-            });
-    });
+    gm('inspiration.jpg')
+        .region(resolution[0], resolution[1], 0, 0)
+        .gravity('Center')
+        .fill('#3a3a3a')
+        .stroke('#ffffff', 2)
+        .font(fonts[getRandomInt(4)], 70)
+        .drawText(0, -100, wrap(quote, {
+            width: 25
+        }))
+        .write('inspiration.jpg', err => {
+            if (err) return console.error(err);
+            res.send("Done");
+        });
+  });
 });
 
 app.get('/image', (req, res) => {
