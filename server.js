@@ -24,6 +24,7 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }  
 
+const app = express();
 
 var now = new Date();
 var start = new Date(now.getFullYear(), 0, 0);
@@ -41,24 +42,8 @@ let fonts = ['Arial', 'Verdana', 'Arial Black', 'Impact'];
 const PORT = 3000;
 const HOST = '0.0.0.0';
 
-const app = express();
 app.get('/', (req, res) => {
-    res.send({
-        "messages": [
-          {
-            "attachment": {
-              "type": "image",
-              "payload": {
-                "url": "http://wsb.onthewifi.com:3000/image"
-              }
-            }
-          }
-        ]
-      });
-});
-
-app.get('/image', (req, res) => {
-    download('https://picsum.photos/' + resolution[0] + '/' + resolution[1], 'inspiration.jpg', function () {
+  download('https://picsum.photos/' + resolution[0] + '/' + resolution[1], 'inspiration.jpg', function () {
         gm('inspiration.jpg')
             .region(resolution[0], resolution[1], 0, 0)
             .gravity('Center')
@@ -70,10 +55,35 @@ app.get('/image', (req, res) => {
             }))
             .write('inspiration.jpg', err => {
                 if (err) return console.error(err);
-                console.log("Done");
-                res.sendFile(__dirname + '/inspiration.jpg');
+                //res.sendFile(__dirname + '/inspiration.jpg');
+                res.json({
+                  "messages": [
+                    {
+                      "attachment": {
+                        "type": "image",
+                        "payload": {
+                          "url": "http://wsb.onthewifi.com:3000/image"
+                        }
+                      }
+                    }
+                  ]
+                });
             });
     });
+});
+
+app.get('/image', (req, res) => {
+  var type = 'image/jpeg';
+  var s = fs.createReadStream(__dirname + '/inspiration.jpg');
+
+  s.on('open', function () {
+      res.set('Content-Type', type);
+      s.pipe(res);
+  });
+  s.on('error', function () {
+      res.set('Content-Type', 'text/plain');
+      res.status(404).end('Not found');
+  });
 });
 
 app.listen(PORT, HOST);
